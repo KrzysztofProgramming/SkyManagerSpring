@@ -3,6 +3,7 @@ package me.practice.spring.skymanager;
 import me.practice.spring.skymanager.models.Flight;
 import me.practice.spring.skymanager.models.FlightBaggage;
 import me.practice.spring.skymanager.models.FlightCargo;
+import me.practice.spring.skymanager.models.LoadIdentifier;
 import me.practice.spring.skymanager.repositories.BaggageRepository;
 import me.practice.spring.skymanager.repositories.CargoRepository;
 import me.practice.spring.skymanager.repositories.FlightRepository;
@@ -43,16 +44,14 @@ class SkyManagerApplicationTests {
 	@Test
 	void createCargoAndBaggage(){
 		FlightBaggage baggage = FlightBaggage.builder()
-				.id(1L)
-				.flightId(1L)
+				.id(new LoadIdentifier(1L, 1L))
 				.pieces(5)
-				.weight(323.132)
+				.weightKg(323.132)
 				.build();
 		FlightCargo cargo = FlightCargo.builder()
-				.id(1L)
-				.flightId(1L)
+				.id(new LoadIdentifier(1L, 1L))
 				.pieces(10)
-				.weight(132.3123)
+				.weightKg(132.3123)
 				.build();
 		this.baggageRepository.save(baggage);
 		this.cargoRepository.save(cargo);

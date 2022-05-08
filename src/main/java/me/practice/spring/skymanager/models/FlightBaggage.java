@@ -2,9 +2,9 @@ package me.practice.spring.skymanager.models;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import me.practice.spring.skymanager.controllers.models.LoadModel;
 
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +14,11 @@ public class FlightBaggage extends FlightLoad {
     public static final String TABLE_NAME = "baggage_table";
 
     @Builder
-    public FlightBaggage(Long id, Double weight, Integer pieces, Long flightId, Flight flight) {
-        super(id, weight, pieces, flightId, flight);
+    public FlightBaggage(LoadIdentifier id, Double weightKg, Integer pieces, Flight flight) {
+        super(id, weightKg, pieces, flight);
+    }
+
+    public FlightBaggage(LoadModel model, Long flightId) {
+        super(model, flightId);
     }
 }

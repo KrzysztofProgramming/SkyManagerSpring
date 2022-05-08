@@ -2,6 +2,8 @@ package me.practice.spring.skymanager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import me.practice.spring.skymanager.controllers.models.LoadModel;
+import me.practice.spring.skymanager.weight.WeightUnits;
 
 import javax.persistence.*;
 
@@ -11,18 +13,29 @@ import javax.persistence.*;
 @MappedSuperclass
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class FlightLoad {
-    @Id
-    @EqualsAndHashCode.Include
-    private Long id;
-    private Double weight;
-    private Integer pieces;
+    @EmbeddedId
+    private LoadIdentifier id;
 
-    @Column(name = "flight_id")
-    protected Long flightId;
+    @Column(name = "weight")
+    private Double weightKg;
+    private Integer pieces;
 
     @ToString.Exclude
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id", insertable = false, updatable = false)
-    protected Flight flight;
+    @MapsId("flightId")
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
+    public Double getWeightLb(){
+        return this.weightKg * 2.20462262;
+    }
+
+    public FlightLoad(LoadModel model, Long flightId){
+        this.weightKg = model.getWeightUnit().equals(WeightUnits.LB.getPrefix())
+                ? model.getWeight() * 0.45359237 : model.getWeight();
+        this.pieces = model.getPieces();
+        this.id = new LoadIdentifier(model.getId(), flightId);
+        this.flight = Flight.builder().flightId(flightId).build();
+    }
 }
