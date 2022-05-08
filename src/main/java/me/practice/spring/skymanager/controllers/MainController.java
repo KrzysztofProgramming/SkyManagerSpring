@@ -1,7 +1,9 @@
 package me.practice.spring.skymanager.controllers;
 
+import me.practice.spring.skymanager.controllers.models.CodeAndDateRequest;
 import me.practice.spring.skymanager.controllers.models.FlightRequest;
 import me.practice.spring.skymanager.controllers.models.LoadRequest;
+import me.practice.spring.skymanager.controllers.models.NumberAndDateRequest;
 import me.practice.spring.skymanager.models.Flight;
 import me.practice.spring.skymanager.models.FlightBaggage;
 import me.practice.spring.skymanager.models.FlightCargo;
@@ -9,6 +11,7 @@ import me.practice.spring.skymanager.models.FlightLoad;
 import me.practice.spring.skymanager.repositories.BaggageRepository;
 import me.practice.spring.skymanager.repositories.CargoRepository;
 import me.practice.spring.skymanager.repositories.FlightRepository;
+import me.practice.spring.skymanager.searchers.FlightSearcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,9 @@ public class MainController {
     @Autowired
     private BaggageRepository baggageRepository;
 
+    @Autowired
+    private FlightSearcher flightSearcher;
+
     @PutMapping("uploadFlights")
     public ResponseEntity<?> uploadFlights(@RequestBody @Valid List<FlightRequest> flights){
         try {
@@ -54,5 +60,17 @@ public class MainController {
         this.cargoRepository.saveAll(cargo);
         this.baggageRepository.saveAll(baggage);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("flightNumberStats")
+    public ResponseEntity<?> getNumberDateStats(@Valid @RequestBody NumberAndDateRequest request){
+        return ResponseEntity.ok(this.flightSearcher.statsByDateAndNumber(
+                request.getStartDate(), request.getEndDate(), request.getFlightNumber()));
+    }
+
+    @PostMapping("IATACodeStats")
+    public ResponseEntity<?> getCodeDateStats(@Valid @RequestBody CodeAndDateRequest request){
+        return ResponseEntity.ok(this.flightSearcher.statsByDateAndCode(
+                request.getStartDate(), request.getEndDate(), request.getCode()));
     }
 }

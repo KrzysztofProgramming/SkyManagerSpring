@@ -7,12 +7,18 @@ import me.practice.spring.skymanager.models.LoadIdentifier;
 import me.practice.spring.skymanager.repositories.BaggageRepository;
 import me.practice.spring.skymanager.repositories.CargoRepository;
 import me.practice.spring.skymanager.repositories.FlightRepository;
+import me.practice.spring.skymanager.searchers.FlightSearcher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.ZoneIdEditor;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 @SpringBootTest
 class SkyManagerApplicationTests {
@@ -25,6 +31,9 @@ class SkyManagerApplicationTests {
 
 	@Autowired
 	private FlightRepository flightRepository;
+
+	@Autowired
+	private FlightSearcher flightSearcher;
 
 	@Test
 	void contextLoads() {
@@ -63,4 +72,19 @@ class SkyManagerApplicationTests {
 		System.out.println(this.flightRepository.findAll());
 	}
 
+
+	@Test
+	void testSearch(){
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTimeZone(TimeZone.getTimeZone("America/Mexico_City"));
+		calendar.set(Calendar.YEAR, 2014);
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		System.out.println(this.flightSearcher.statsByDateAndCode(calendar.getTime(), new Date(), "KRK"));
+		System.out.println(this.flightSearcher.statsByDateAndNumber(calendar.getTime(), new Date(), 1232L));
+	}
 }
