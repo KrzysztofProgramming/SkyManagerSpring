@@ -21,8 +21,8 @@ public class FlightRequest {
     private String arrivalAirportIATACode;
     private Date departureDate;
 
-    public void setDepartureDate(String departureDate) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
-        this.departureDate = format.parse(departureDate);
-    }
+//    public void setDepartureDate(String departureDate) throws ParseException {
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
+//        this.departureDate = format.parse(departureDate);
+//    }
 }

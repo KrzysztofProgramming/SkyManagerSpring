@@ -7,22 +7,24 @@ import me.practice.spring.skymanager.controllers.models.NumberAndDateRequest;
 import me.practice.spring.skymanager.models.Flight;
 import me.practice.spring.skymanager.models.FlightBaggage;
 import me.practice.spring.skymanager.models.FlightCargo;
-import me.practice.spring.skymanager.models.FlightLoad;
 import me.practice.spring.skymanager.repositories.BaggageRepository;
 import me.practice.spring.skymanager.repositories.CargoRepository;
 import me.practice.spring.skymanager.repositories.FlightRepository;
 import me.practice.spring.skymanager.searchers.FlightSearcher;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:4100/", maxAge = 3600)
 @RequestMapping("api/")
 public class MainController {
 
@@ -57,8 +59,15 @@ public class MainController {
             cargo.addAll(load.getCargo().stream().map(model -> new FlightCargo(model, load.getFlightId())).toList());
             baggage.addAll(load.getBaggage().stream().map(model->new FlightBaggage(model, load.getFlightId())).toList());
         });
-        this.cargoRepository.saveAll(cargo);
-        this.baggageRepository.saveAll(baggage);
+        try {
+            this.cargoRepository.saveAll(cargo);
+            this.baggageRepository.saveAll(baggage);
+        }
+        catch(DataIntegrityViolationException e){
+            if(e.getCause() instanceof ConstraintViolationException)
+                return ResponseEntity.badRequest().body("Nonexistent flightId");
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
 

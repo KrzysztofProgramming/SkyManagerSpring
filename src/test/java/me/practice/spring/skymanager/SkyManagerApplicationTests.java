@@ -76,7 +76,7 @@ class SkyManagerApplicationTests {
 	@Test
 	void testSearch(){
 		Calendar calendar = new GregorianCalendar();
-		calendar.setTimeZone(TimeZone.getTimeZone("America/Mexico_City"));
+//		calendar.setTimeZone(TimeZone.getTimeZone("America/Mexico_City"));
 		calendar.set(Calendar.YEAR, 2014);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
