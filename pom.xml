@@ -12,6 +12,7 @@
 	<artifactId>skymanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SkyManager</name>
+	<packaging>jar</packaging>
 	<description>Simple Flight database manager with web UI</description>
 	<properties>
 		<java.version>17</java.version>
